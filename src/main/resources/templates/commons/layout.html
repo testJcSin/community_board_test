@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot Sample Site</title>
+    <meta name="viewport" content="width=device-width, user-scalable=yes, maximum-scale=1.0, minimum-scale=1.0">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <script th:src="@{/js/jquery1.7.2.min.js}"></script>
+    <script th:src="@{/js/script.js}"></script>
+</head>
+<body>
+  <!-- header -->
+  <div id="header">
+    <div class="inner">
+      <div class="logo">
+        <a href="/">Spring Boot Sample Site<br><span>- Easy Sample Project Application. -</span></a>
+        <h1>SpringBootの簡易掲示板サイトです</h1>
+      </div>
+      <nav id="mainNav">
+        <a class="menu" id="menu"><span>MENU</span></a>
+        <div class="panel">
+          <ul>
+            <li class="active"><a href="/">トップページ<br><span>Top</span></a></li>
+            <li><a href="/board/">掲示板<br><span>Bbs</span></a></li>
+            <li><a href="/account/login/" th:if="${#httpServletRequest.remoteUser == null}">ログイン<br><span>Login</span></a></li>
+            <li><a href="/account/logout/" th:if="${#httpServletRequest.remoteUser != null}">ログアウト<br><span>Logout</span></a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!-- / header -->
+  <div id="wrapper">
+    <div layout:fragment="contents"></div>
+  </div>
+  <!-- / wrapper -->
+  <!-- footer -->
+  <div id="footer">
+    <div class="inner">
+      <section class="gridWrapper">
+        <article class="grid">
+          <p class="logo"><a href="/">Spring Boot Sample Site</a></p>
+        </article>
+        <article class="grid">
+          &nbsp;
+        </article>
+        <article class="grid copyright">
+          Copyright(c) 2018 Hogehoge. All Rights Reserved.
+        </article>
+      </section>
+    </div>
+  </div>
+  <!-- / footer -->
+</body>
+</html>

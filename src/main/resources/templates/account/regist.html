@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{commons/layout}">
+<head>
+    <title>ユーザ登録</title>
+</head>
+<body>
+
+<div layout:fragment="contents">
+  <section id="main">
+    <form id="regist_form" method="post" th:action="@{'/account/register/'}">
+      <fieldset id="regist_field">
+        <section class="content">
+          <h3 class="heading">ユーザ登録</h3>
+          <table class="table">
+            <tr>
+              <th><label>ログインID</label></th>
+              <td><input type="text" class="form-control" id="username" name="username" placeholder="ログインIDを入力してください" autofocus="" required="" size="25" /></td>
+            </tr>
+            <tr>
+              <th><label>メールアドレス</label></th>
+              <td><input type="text" class="form-control" id="mailAddress" name="mailAddress" placeholder="メールアドレスを入力してください" autofocus="" required="" size="25" /></td>
+            </tr>
+            <tr>
+              <th><label>パスワード</label></th>
+              <td><input type="password" class="form-control" id="password" name="password" placeholder="パスワードを入力してください" required="" size="25" /></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: center;"><input id="login_button" type="submit" value="登録" /></td>
+            </tr>
+          </table>
+        </section>
+      </fieldset>
+    </form>
+  </section>
+</div>
+
+</body>
+</html>

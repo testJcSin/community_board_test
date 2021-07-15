@@ -1,0 +1,94 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.5.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'jp.co.rjc'
+version = '0.0.1-SNAPSHOT'
+
+def jdkVersion = 1.8
+sourceCompatibility = jdkVersion
+targetCompatibility = jdkVersion
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava].each {
+    it.options.encoding = defaultEncoding
+    it.options.compilerArgs += ['-source', jdkVersion, '-target', jdkVersion]
+}
+
+def getHostEnvironment() {
+    def hostEnv = 'local'
+    def hostName = InetAddress.getLocalHost().getHostName()
+    println 'this host name is ' + hostName
+    if (hostName.startsWith('stg-')) {
+        hostEnv = 'stg'
+    } else if (hostName.startsWith('prod-')) {
+        hostEnv = 'prod'
+    }
+    return hostEnv
+}
+
+def environment = getHostEnvironment()
+if (project.hasProperty('buildEnv')) {
+    environment = project.getProperties().get("buildEnv")
+}
+println 'build starts with [' + environment + '] environment'
+
+def config = new ConfigSlurper().parse(file("environment/${environment}.gradle").toURI().toURL())
+processResources {
+    exclude '**/application.yml'
+}
+task filterResources(type:Copy) {
+    from('src/main/resources/') {
+        include '**/application.yml'
+        expand (config)
+    }
+    into "${buildDir}/resources/main/"
+}
+processResources.dependsOn filterResources
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+    // SpringBoot
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-redis')
+    compile('org.springframework.boot:spring-boot-devtools')
+
+    // Database
+	runtimeOnly('mysql:mysql-connector-java')
+    runtimeOnly('com.h2database:h2')
+
+    // Template
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0")
+
+    // Other
+    compile('org.projectlombok:lombok')
+
+    // Test
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+task customClean(type: Delete) {
+    delete "out"
+}
+clean.dependsOn customClean

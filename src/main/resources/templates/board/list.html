@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{commons/layout}">
+<head>
+  <title>Top page</title>
+</head>
+<body>
+<div layout:fragment="contents">
+  <section id="main">
+    <section class="content" th:each="boardThread : ${boardThreadList}">
+      <h3 class="heading">
+        <span th:text="${boardThread.getTitle()}">タイトル</span>
+        <span th:text="${'[' + boardThread.getCreatedUser() + '(' + #dates.format(boardThread.getCreatedAt(),'yyyy/MM/dd HH:mm') + ')]'}"></span>
+      </h3>
+      <article th:text="${boardThread.getContents()}">コンテンツ</article>
+      <span th:text="${#lists.size(boardThread.getBoardThreadCommentList())}">件数</span>
+      <section class="grid" th:each="boardThreadComment : ${boardThread.getBoardThreadCommentList()}">
+        <ul class="list">
+          <li th:text="${boardThreadComment.getComments()}">コメント</li>
+        </ul>
+      </section>
+      <section>
+        <form class="threadComment_form" method="post" th:action="@{'/board/thread/'+ ${boardThread.getId()} +'/comment/create/'}">
+          <table class="table">
+            <tr>
+              <th><label>コメント</label></th>
+              <td><textarea name="comment" placeholder="コメントを入力してください" required="" rows="2"></textarea></td>
+              <td style="vertical-align: middle;width: 100px;"><input class="threadComment_post_button" type="submit" value="コメント投稿" /></td>
+            </tr>
+          </table>
+        </form>
+      </section>
+    </section>
+    <form id="thread_form" method="post" th:action="@{'/board/thread/create/'}">
+      <fieldset id="thread_field">
+        <section class="content">
+          <h3 class="heading">記事作成</h3>
+          <table class="table">
+            <tr>
+              <th><label>記事タイトル</label></th>
+              <td><input type="text" class="form-control" id="title" name="title" placeholder="タイトルを入力してください" autofocus="" required="" size="25" /></td>
+            </tr>
+            <tr>
+              <th><label>本文</label></th>
+              <td><textarea id="contents" name="contents" placeholder="本文を入力してください" required="" rows="10"></textarea></td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: center;"><input id="thread_post_button" type="submit" value="投稿" /></td>
+            </tr>
+          </table>
+        </section>
+      </fieldset>
+    </form>
+  </section>
+</div>
+</body>
+</html>
