@@ -46,6 +46,13 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void reg2(String username, String password, String mailAddress) {
         log.info("user: {}, password: {}, mail: {}", username, password, mailAddress);
+
+        User userCheck = userRepository.findByUsername(username);
+        // ユーザーID重複チェック
+        if (userCheck != null) {
+            return;
+        }
+
         User user = new User(username, passwordEncoder.encode(password), mailAddress);
         userRepository.save(user);
     }

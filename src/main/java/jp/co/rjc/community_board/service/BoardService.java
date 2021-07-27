@@ -25,9 +25,17 @@ public class BoardService {
 
     public List<BoardThread> getBoardThreadList() {
         List<BoardThread> boardThreadList = boardThreadRepository.findAll();
+        List<BoardThreadComment> boardThreadCommentList = boardThreadCommentRepository.findAll();
+
+        for (BoardThread boardThread : boardThreadList) {
+            for (BoardThreadComment boardThreadComment : boardThreadCommentList) {
+                if (boardThread.equals(boardThreadComment.getBoardThread())) {
+                    boardThread.getBoardThreadCommentList().add(boardThreadComment);
+                }
+            }
+        }
         return boardThreadList;
     }
-
     public void addBoardThread(BoardThreadForm boardThreadForm) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
